@@ -1,0 +1,119 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100
+
+typedef struct {
+    int id;
+    char title[50];
+    char author[50];
+    int isIssued; // 0 = available, 1 = issued
+} Book;
+
+Book library[MAX];
+int count = 0;
+
+void addBook() {
+    if (count >= MAX) {
+        printf("Library is full!\n");
+        return;
+    }
+
+    printf("Enter Book ID: ");
+    scanf("%d", &library[count].id);
+    printf("Enter Title: ");
+    scanf(" %[^\n]", library[count].title);
+    printf("Enter Author: ");
+    scanf(" %[^\n]", library[count].author);
+    library[count].isIssued = 0;
+    count++;
+
+    printf("Book added successfully!\n");
+}
+
+void viewBooks() {
+    printf("\n--- All Books ---\n");
+    for (int i = 0; i < count; i++) {
+        printf("ID: %d | Title: %s | Author: %s | Status: %s\n",
+               library[i].id, library[i].title, library[i].author,
+               library[i].isIssued ? "Issued" : "Available");
+    }
+}
+
+void searchBook() {
+    int id;
+    printf("Enter Book ID to search: ");
+    scanf("%d", &id);
+    for (int i = 0; i < count; i++) {
+        if (library[i].id == id) {
+            printf("Book found: %s by %s [%s]\n",
+                   library[i].title, library[i].author,
+                   library[i].isIssued ? "Issued" : "Available");
+            return;
+        }
+    }
+    printf("Book not found.\n");
+}
+
+void issueBook() {
+    int id;
+    printf("Enter Book ID to issue: ");
+    scanf("%d", &id);
+    for (int i = 0; i < count; i++) {
+        if (library[i].id == id) {
+            if (!library[i].isIssued) {
+                library[i].isIssued = 1;
+                printf("Book issued successfully.\n");
+            } else {
+                printf("Book is already issued.\n");
+            }
+            return;
+        }
+    }
+    printf("Book not found.\n");
+}
+
+void returnBook() {
+    int id;
+    printf("Enter Book ID to return: ");
+    scanf("%d", &id);
+    for (int i = 0; i < count; i++) {
+        if (library[i].id == id) {
+            if (library[i].isIssued) {
+                library[i].isIssued = 0;
+                printf("Book returned successfully.\n");
+            } else {
+                printf("Book was not issued.\n");
+            }
+            return;
+        }
+    }
+    printf("Book not found.\n");
+}
+
+int main() {
+    int choice;
+    do {
+        printf("\n--- Library Management Menu ---\n");
+        printf("1. Add Book\n");
+        printf("2. View Books\n");
+        printf("3. Search Book\n");
+        printf("4. Issue Book\n");
+        printf("5. Return Book\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: addBook(); break;
+            case 2: viewBooks(); break;
+            case 3: searchBook(); break;
+            case 4: issueBook(); break;
+            case 5: returnBook(); break;
+            case 6: printf("Goodbye!\n"); break;
+            default: printf("Invalid choice. Try again.\n");
+        }
+    } while (choice != 6);
+
+    return 0;
+}
